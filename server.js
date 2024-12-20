@@ -1,12 +1,25 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
+const cors = require('cors'); // Tambahkan CORS
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
 
-// Serve static files
+// Mengaktifkan CORS
+app.use(cors({
+  origin: 'https://si-pintar-pnjaksel-front-end.vercel.app', // Ubah dengan domain frontend Anda
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+}));
+
+const io = new Server(server, {
+  cors: {
+    origin: 'https://si-pintar-pnjaksel-front-end.vercel.app', // Ubah dengan domain frontend Anda
+    methods: ['GET', 'POST'],
+  }
+});
+
 app.use(express.static('public')); // Folder untuk frontend jika ingin digabung
 
 io.on('connection', (socket) => {
